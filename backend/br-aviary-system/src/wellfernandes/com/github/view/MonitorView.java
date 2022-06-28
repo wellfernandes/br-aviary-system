@@ -290,7 +290,7 @@ public class MonitorView extends JFrame implements ChangeListener {
 			if (btnClicked.getSource() == btnRelay01 && btnRelay01.getText().equalsIgnoreCase("1 Off")) {
 				btnRelay01.setText("1 On");
 				btnRelay01.setBackground(Color.GREEN);
-				automationControl.relay01("On");
+				automationControl.relay01("turn on");
 			} else if (btnClicked.getSource() == btnRelay01 && btnRelay01.getText().equalsIgnoreCase("1 On")) {
 				btnRelay01.setText("1 Off");
 				btnRelay01.setBackground(Color.RED);

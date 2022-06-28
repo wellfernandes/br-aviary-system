@@ -28,8 +28,8 @@ public class AutomationControl {
 	}
 
 	// activation of relays
-	public void relay01(String comandoRele) {
-		if (comandoRele.equalsIgnoreCase("turn on")) {
+	public void relay01(String commandRelay) {
+		if (commandRelay.equalsIgnoreCase("turn on")) {
 			Thread threadEnviaDados = new Thread() {
 				@Override
 				public void run() {
@@ -41,12 +41,13 @@ public class AutomationControl {
 			threadEnviaDados.start();
 		} else {
 			PrintWriter sendData = new PrintWriter(SerialConnectionControl.getSerialPort().getOutputStream());
+			sendData.print("b");
 			sendData.flush();
 		}
 	}
 
-	public void relay02(String comandoRele) {
-		if (comandoRele.equalsIgnoreCase("turn on")) {
+	public void relay02(String commandRelay) {
+		if (commandRelay.equalsIgnoreCase("turn on")) {
 			Thread threadEnviaDados = new Thread() {
 				@Override
 				public void run() {
