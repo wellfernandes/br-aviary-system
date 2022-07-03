@@ -40,14 +40,13 @@ import org.jfree.data.general.ValueDataset;
 import org.jfree.ui.GradientPaintTransformType;
 import org.jfree.ui.StandardGradientPaintTransformer;
 
-import wellfernandes.com.github.bean.TemperatureBEAN;
 import wellfernandes.com.github.controller.AutomationControl;
 import wellfernandes.com.github.controller.SerialConnectionControl;
 
 public class MonitorView extends JFrame implements ChangeListener {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private JFrame monitorFrame;
 	private ImageIcon systemIcon;
 	private JMenuBar menuBar;
@@ -68,9 +67,9 @@ public class MonitorView extends JFrame implements ChangeListener {
 	private JPanel panelTempMeter;
 	private JLabel lblFooter;
 
-	private TemperatureBEAN temperaturaBean = new TemperatureBEAN();
 	private JComboBox<String> listReferencePorts;
 	private DefaultValueDataset meterGraphTemp;
+	private float currentTemperature;
 
 	private static SerialConnectionControl serialConnectionControl = new SerialConnectionControl();
 	private static AutomationControl automationControl = new AutomationControl();
@@ -136,7 +135,8 @@ public class MonitorView extends JFrame implements ChangeListener {
 		panelTempMeter = new JPanel();
 
 		// constructor
-		meterGraphTemp = new DefaultValueDataset(temperaturaBean.gettemperatureValue());
+		meterGraphTemp = new DefaultValueDataset(getCurrentTemperature());
+
 		JFreeChart jfreechartTemperatura = meterTemperature("Monitor", "Temperature °C", meterGraphTemp, 0D, 100D, 10D,
 				9);
 		DialPlot dialplot = (DialPlot) jfreechartTemperatura.getPlot();
@@ -267,12 +267,16 @@ public class MonitorView extends JFrame implements ChangeListener {
 				if (btnConnect.getText().equalsIgnoreCase("connect")) {
 
 					if (serialConnectionControl.connectAutomation()) {
+
+						tempToGraph();
 						btnConnect.setText("disconnect");
 						listReferencePorts.setEnabled(false);
 						btnRelay01.setEnabled(true);
 						btnRelay02.setEnabled(true);
 						btnRelay03.setEnabled(true);
 						btnRelay04.setEnabled(true);
+					} else {
+						System.out.println("error to connect.");
 					}
 				} else if (btnClicked.getSource() == btnConnect
 						&& btnConnect.getText().equalsIgnoreCase("disconnect")) {
@@ -336,15 +340,6 @@ public class MonitorView extends JFrame implements ChangeListener {
 
 		@Override
 		public void mouseEntered(MouseEvent btn) {
-			if (btn.getSource() == btnConnect) {
-				System.out.print("Connect to automation.");
-			}
-			if (btn.getSource() == btnRelay01 && btnRelay01.getText().equalsIgnoreCase("1 Off")) {
-				System.out.print("turn on relay 01.");
-			}
-			if (btn.getSource() == btnRelay01 && btnRelay01.getText().equalsIgnoreCase("1 On")) {
-				System.out.print("turn off relay 01.");
-			}
 		}
 
 		@Override
@@ -354,5 +349,28 @@ public class MonitorView extends JFrame implements ChangeListener {
 
 	@Override
 	public void stateChanged(ChangeEvent e) {
+	}
+
+	// set temperature on graph
+	public float tempToGraph() {
+		Thread threadRecebeDados = new Thread() {
+			@Override
+			public void run() {
+				while (true) {
+					setCurrentTemperature(serialConnectionControl.getArduinoTemperature());
+					meterGraphTemp.setValue(getCurrentTemperature());
+				}
+			}
+		};
+		threadRecebeDados.start();
+		return currentTemperature;
+	}
+
+	public float getCurrentTemperature() {
+		return currentTemperature;
+	}
+
+	public void setCurrentTemperature(float currentTemperature) {
+		this.currentTemperature = currentTemperature;
 	}
 }
