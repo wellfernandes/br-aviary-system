@@ -2,29 +2,16 @@ package wellfernandes.com.github.controller;
 
 import java.io.PrintWriter;
 
-import wellfernandes.com.github.bean.TemperatureBEAN;
-import wellfernandes.com.github.dao.TemperatureDAO;
-
 public class AutomationControl {
 
+	private float currentTemperature = 0;
 	private float maxTemp = 0;
 	private float minTemp = 0;
 
 	private String btnAction = null;
-	private TemperatureDAO TemperatureDao;
-	private TemperatureBEAN TemperatureBean;
 
 	public AutomationControl() {
 
-	}
-
-	// collected temperature data
-	public void equipmentControl(float TemperatureAtual) {
-
-		System.out.println("Current Temperature: " + TemperatureAtual);
-		System.out.println("Minimum temperature: " + minTemp);
-		System.out.println("Maximum temperature: " + maxTemp);
-		System.out.println("");
 	}
 
 	// activation of relays
@@ -100,6 +87,14 @@ public class AutomationControl {
 		}
 	}
 
+	public float getCurrentTemperature() {
+		return currentTemperature;
+	}
+
+	public void setCurrentTemperature(float currentTemperature) {
+		this.currentTemperature = currentTemperature;
+	}
+
 	public float getMaxTemp() {
 		return maxTemp;
 	}
@@ -122,21 +117,5 @@ public class AutomationControl {
 
 	public void setBtnAction(String btnAction) {
 		this.btnAction = btnAction;
-	}
-
-	public TemperatureDAO getTemperatureDao() {
-		return TemperatureDao;
-	}
-
-	public void setTemperatureDao(TemperatureDAO temperatureDao) {
-		TemperatureDao = temperatureDao;
-	}
-
-	public TemperatureBEAN getTemperatureBean() {
-		return TemperatureBean;
-	}
-
-	public void setTemperatureBean(TemperatureBEAN temperatureBean) {
-		TemperatureBean = temperatureBean;
 	}
 }
