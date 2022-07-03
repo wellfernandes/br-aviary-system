@@ -13,7 +13,7 @@
  *  4 - liga: g desliga: h
  */
  
-#include <Wire.h>
+
 //Bibliotecas coletar dados do Sensor de Temperatura
 #include <OneWire.h>
 #include <DallasTemperature.h>
@@ -117,8 +117,8 @@ void loop() {
   float temperatura = getTemperatura();
   
   //Enviar Dados
-  //Serial.println(temperatura);
-  //int temperaturaInteira = (int) temperatura;
+  Serial.println(temperatura);
+  int temperaturaInteira = (int) temperatura;
 
   acionaLCD(temperatura);
 }
