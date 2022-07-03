@@ -6,7 +6,6 @@ import javax.swing.JComboBox;
 
 import com.fazecast.jSerialComm.SerialPort;
 
-import wellfernandes.com.github.bean.TemperatureBEAN;
 import wellfernandes.com.github.view.ConnectionErrorView;
 import wellfernandes.com.github.view.ConnectionOkView;
 
@@ -14,14 +13,14 @@ public class SerialConnectionControl {
 
 	private static SerialPort serialPort;
 	private static JComboBox<String> portList = new JComboBox<String>();
-	private Thread connectionThread;
 
-	private float arduinoTemperature = 0;
-	private String receivedData = null;
-	private TemperatureBEAN temperaturaBean;
+	private Thread connectionThread;
+	private Thread threadReceivedData;
+
+	private float arduinoTemperature;
 
 	// Receive serial read data
-	private Scanner scanner;
+	private static Scanner scanner;
 
 	public SerialConnectionControl() {
 
@@ -29,35 +28,38 @@ public class SerialConnectionControl {
 
 	// connect automation
 	public boolean connectAutomation() {
+		if (serialPort == null) {
+			serialPort = SerialPort.getCommPort(getPortList().getSelectedItem().toString());
+			serialPort.setComPortTimeouts(SerialPort.TIMEOUT_SCANNER, 0, 0);
 
-		serialPort = SerialPort.getCommPort(getPortList().getSelectedItem().toString());
-		serialPort.setComPortTimeouts(SerialPort.TIMEOUT_SCANNER, 0, 0);
-
-		// connect to serial port - thread dedicated to serial connection
-		connectionThread = new Thread() {
-			public void run() {
-				if (serialPort.openPort()) {
-					System.out.println("Connected automation.");
-					System.out.println("Port used for connection: " + portList.getSelectedItem().toString());
-					new ConnectionOkView();
-				} else {
-					System.err.println("-> Failed to connect automation <-");
-					System.out.println("Port used " + portList.getSelectedItem().toString() + " not allowed!");
-					new ConnectionErrorView();
+			// connect to serial port - thread dedicated to serial connection
+			connectionThread = new Thread() {
+				public void run() {
+					if (serialPort.openPort()) {
+						System.out.println("Connected automation.");
+						System.out.println("Port used for connection: " + portList.getSelectedItem().toString());
+						new ConnectionOkView();
+						receiveArduinoData();
+					} else {
+						System.err.println("-> Failed to connect automation <-");
+						System.out.println("Port used " + portList.getSelectedItem().toString() + " not allowed!");
+						new ConnectionErrorView();
+					}
 				}
-			}
-		};
-		connectionThread.start();
-		return true;
+			};
+			connectionThread.start();
+			return true;
+		}
+		return false;
 	}
 
 	// disconnect automation
 	public void desconnectAutomation() {
+		threadReceivedData.interrupt();
 		serialPort.closePort();
 		serialPort = null;
-		receivedData = null;
 		arduinoTemperature = 0;
-		connectionThread.interrupt();
+
 		System.out.println("Automation disconnected.");
 	}
 
@@ -75,19 +77,29 @@ public class SerialConnectionControl {
 		}
 	}
 
+	// receive arduino data
 	public void receiveArduinoData() {
-		scanner = new Scanner(serialPort.getInputStream());
-		while (scanner.hasNextLine()) {
-			try {
-				receivedData = scanner.nextLine();
-				arduinoTemperature = Float.parseFloat(receivedData);
-				System.out.println("Ok, getting the automation data." + arduinoTemperature);
-			} catch (Exception e) {
-				System.err.println("Unable to receive automation data.");
-				break;
+		threadReceivedData = new Thread() {
+			@Override
+			public void run() {
+				scanner = new Scanner(serialPort.getInputStream());
+				while (true) {
+					try {
+						if (serialPort.isOpen()) {
+							while (scanner.hasNext()) {
+								String arduino = scanner.next();
+								setArduinoTemperature(Float.parseFloat(arduino));
+							}
+							scanner.close();
+						}
+					} catch (Exception e) {
+						System.err.println("Unable to receive data from automation.");
+						break;
+					}
+				}
 			}
-		}
-		scanner.close();
+		};
+		threadReceivedData.start();
 	}
 
 	public static SerialPort getSerialPort() {
@@ -121,21 +133,4 @@ public class SerialConnectionControl {
 	public void setArduinoTemperature(float arduinoTemperature) {
 		this.arduinoTemperature = arduinoTemperature;
 	}
-
-	public String getReceivedData() {
-		return receivedData;
-	}
-
-	public void setReceivedData(String receivedData) {
-		this.receivedData = receivedData;
-	}
-
-	public TemperatureBEAN getTemperaturaBean() {
-		return temperaturaBean;
-	}
-
-	public void setTemperaturaBean(TemperatureBEAN temperaturaBean) {
-		this.temperaturaBean = temperaturaBean;
-	}
-
 }
