@@ -52,9 +52,9 @@ public class MonitorView extends JFrame implements ChangeListener {
 	private JMenuBar menuBar;
 	private JMenu settingsMenu;
 	private JMenu menuProfile;
-	private JMenu menuSistema;
-	private JMenuItem itemMenuConfigEquipamentos;
-	private JMenuItem itemMenuInformacoes;
+	private JMenu menuSystem;
+	private JMenuItem itemMenuConfigEquipments;
+	private JMenuItem itemMenuInfo;
 	private JMenuItem itemMenuNewProfile;
 	private JMenuItem itemMenuEditProfile;
 	private JButton btnConnect;
@@ -107,11 +107,11 @@ public class MonitorView extends JFrame implements ChangeListener {
 		menuBar = new JMenuBar();
 		settingsMenu = new JMenu("settings");
 		menuProfile = new JMenu("profile");
-		menuSistema = new JMenu("system");
-		itemMenuConfigEquipamentos = new JMenuItem("configure equipment");
+		menuSystem = new JMenu("system");
+		itemMenuConfigEquipments = new JMenuItem("configure equipment");
 		itemMenuNewProfile = new JMenuItem("new profile");
 		itemMenuEditProfile = new JMenuItem("edit profile");
-		itemMenuInformacoes = new JMenuItem("info");
+		itemMenuInfo = new JMenuItem("info");
 		btnConnect = new JButton("connect");
 		btnRelay01 = new JButton("1 off");
 		btnRelay02 = new JButton("2 off");
@@ -177,19 +177,19 @@ public class MonitorView extends JFrame implements ChangeListener {
 		monitorFrame.setIconImage(systemIcon.getImage());
 
 		// settings menu
-		settingsMenu.add(itemMenuConfigEquipamentos);
+		settingsMenu.add(itemMenuConfigEquipments);
 
 		// profile menu
 		menuProfile.add(itemMenuNewProfile);
 		menuProfile.add(itemMenuEditProfile);
 
 		// system menu
-		menuSistema.add(itemMenuInformacoes);
+		menuSystem.add(itemMenuInfo);
 
 		// add menu bar
 		menuBar.add(settingsMenu);
 		menuBar.add(menuProfile);
-		menuBar.add(menuSistema);
+		menuBar.add(menuSystem);
 
 		// relay buttons Panel - control panel
 		// panelButtons.setSize(200, 350);
@@ -229,10 +229,10 @@ public class MonitorView extends JFrame implements ChangeListener {
 		monitorFrame.setVisible(true);
 
 		// method for handling the menu buttons
-		itemMenuConfigEquipamentos.addActionListener(new menuEvents());
+		itemMenuConfigEquipments.addActionListener(new menuEvents());
 		itemMenuNewProfile.addActionListener(new menuEvents());
 		itemMenuEditProfile.addActionListener(new menuEvents());
-		itemMenuInformacoes.addActionListener(new menuEvents());
+		itemMenuInfo.addActionListener(new menuEvents());
 
 		// button handling method
 		btnConnect.addMouseListener(new buttonEvents());
@@ -246,13 +246,13 @@ public class MonitorView extends JFrame implements ChangeListener {
 	private class menuEvents implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent menuItem) {
-			if (menuItem.getSource() == itemMenuConfigEquipamentos) {
+			if (menuItem.getSource() == itemMenuConfigEquipments) {
 				JOptionPane.showMessageDialog(null, "Ok!");
 			} else if (menuItem.getSource() == itemMenuNewProfile) {
 				JOptionPane.showMessageDialog(null, "OK");
 			} else if (menuItem.getSource() == itemMenuEditProfile) {
 				JOptionPane.showMessageDialog(null, "Ok!");
-			} else if (menuItem.getSource() == itemMenuInformacoes) {
+			} else if (menuItem.getSource() == itemMenuInfo) {
 				JOptionPane.showMessageDialog(null, "system info");
 			}
 		}
