@@ -111,7 +111,7 @@ void loop() {
       digitalWrite(rele04, LOW);
     }
 
-    Serial.println(dadoRecebido);
+    //Serial.println(dadoRecebido);
   }
   
   float temperatura = getTemperatura();
