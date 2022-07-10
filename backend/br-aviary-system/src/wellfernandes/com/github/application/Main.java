@@ -1,5 +1,6 @@
-package wellfernandes.com.github.controller;
+package wellfernandes.com.github.application;
 
+import wellfernandes.com.github.controller.SerialConnectionControl;
 import wellfernandes.com.github.view.ConnectionErrorView;
 import wellfernandes.com.github.view.MonitorView;
 
