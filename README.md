@@ -2,13 +2,11 @@
 
 ![br-aviary-system](img/br-aviary-system.png)
 
-Desktop java application that displays data collected from ds18b20 temperature sensors and displays in a real-time graph. 
+Aplicativo java desktop que exibe dados coletados de sensores de temperatura ds18b20 e exibe em um gráfico em tempo real. 
 
 ## 🚀 Description
 
-The purpose of br-aviary-system is to be a real-time temperature monitor. The application is a study of the communication between a java desktop application and arduino uno r3.
-In addition to displaying the temperature in real time, it is possible to control four relays connected to the Arduino.
-The idea is to implement an automatic mode that can receive the maximum and minimum temperature data as parameters, making it possible to turn the relays on and off automatically.
+O objetivo do sistema br-aviary é ser um monitor de temperatura em tempo real. O sistema é um estudo da comunicação entre uma aplicação java desktop e o arduino uno r3. Além de exibir a temperatura em tempo real, é possível controlar quatro relés conectados ao Arduino. A ideia é implementar um modo automático que receba como parâmetros os dados de temperatura máxima e mínima, possibilitando ligar e desligar os relés automaticamente.
 
 
 ---
