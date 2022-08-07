@@ -27,7 +27,7 @@ float getTemperatura();
 void acionaLCD(float temperatura);
 
 
-//Define a temperatura m�xima e m�nima para o range do sensor
+//Define a temperatura máxima e mínima para o range do sensor
 #define TEMP_MAX  27
 #define TEMP_MIN 23
 #define TEMP_VENTILADOR 25
@@ -49,21 +49,21 @@ float tempMin = 0;
 
 int dadoRecebido = 0;
 
-//Variaveis dos Leds de Status
+//Variáveis dos leds de status
 int ledTempOk = 11;
 int ledTempNo = 10;
-// Define o pino para conexao do Sensor
+// Define o pino para conexão do sensor
 OneWire oneWire(sensorDigTemperatura);
 //Display LCD - 16x2 - Utilizando modulo I2C
 LiquidCrystal_I2C lcd(0x3F, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);
 
 void setup() {
-  //Inicializa comunica��o Serial
+  //Inicializa comunicação serial
   Serial.begin(9600);
   
-  //----------Configuracao do Display de LCD------------------//
+  //----------Configuracao do display de LCD------------------//
   //---------------------------------------------------------//
-  //Configura tamanho do Display
+  //Configura tamanho do display
   lcd.begin(16, 2);
   //Pino Led Ok - Verde
   pinMode(ledTempOk, OUTPUT);
@@ -132,11 +132,11 @@ float getTemperatura() {
     return -1000;
   }
   if ( OneWire::crc8( addr, 7) != addr[7]) {
-    Serial.println("CRC is not valid!");
+    Serial.println("CRC não é válido!");
     return -1000;
   }
   if ( addr[0] != 0x10 && addr[0] != 0x28) {
-    Serial.print("Device is not recognized");
+    Serial.print("O dispositivo não foi reconhecido!");
     return -1000;
   }
   oneWire.reset();
@@ -144,14 +144,14 @@ float getTemperatura() {
   oneWire.write(0x44, 1); // Inicia a convers�o
   byte present = oneWire.reset();
   oneWire.select(addr);
-  oneWire.write(0xBE); // Read Scratchpad
+  oneWire.write(0xBE);
   for (int i = 0; i < 9; i++) { // Precisa-se de 9 Bytes
     data[i] = oneWire.read();
   }
   oneWire.reset_search();
   byte MSB = data[1];
   byte LSB = data[0];
-  float tempRead = ((MSB << 8) | LSB); //using two's compliment
+  float tempRead = ((MSB << 8) | LSB);
   float TemperaturaAtual = tempRead / 16;
   return TemperaturaAtual;
 }
